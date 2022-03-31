@@ -4,7 +4,7 @@ const service = new SerieService()
 const express = require('express')
 const serieRoute = express.Router()
 
-serieRoute.post('/serie', async (req, res) => {
+serieRoute.post('/serie', async (req, res, ) => {
   try {
     const serie = SerieModel(req.body)
     const data = await service.createSerie(serie)
@@ -28,46 +28,40 @@ serieRoute.get('/', async (req, res) => {
   }
 })
 
-serieRoute.get('/:serieId', async (req, res) => {
+serieRoute.get('/:serieId', async (req, res, next) => {
   try {
     const { serieId } = req.params
     const data = await service
     .showSerie(serieId)
     res.status(200).json({ data })
   } catch (error) {
-    res.status(404).json({
-      message: error,
-    })
+    next(error)
   }
 })
 
-serieRoute.get('/actor/:nameActor', async (req, res) => {
+serieRoute.get('/actor/:nameActor', async (req, res, next) => {
   try {
     const { nameActor } = req.params
     const data = await service
     .showSeriesActor(nameActor)
     res.status(200).json({ data })
   } catch (error) {
-    res.status(404).json({
-      message: error,
-    })
+    next(error)
   }
 })
 
-serieRoute.get('/search/:date', async (req, res) => {
+serieRoute.get('/search/:date', async (req, res, next) => {
   try {
     const { date } = req.params
     const data = await service
     .showSeriesDate(date)
     res.status(200).json({ data })
   } catch (error) {
-    res.status(404).json({
-      message: error,
-    })
+    next(error)
   }
 })
 
-serieRoute.put('/:serieId', async (req, res) => {
+serieRoute.put('/:serieId', async (req, res, next) => {
   try {
     const { serieId } = req.params;
     const { serie, number_seasons, original_language, features_seasons, episodes } = req.body;
@@ -81,20 +75,18 @@ serieRoute.put('/:serieId', async (req, res) => {
     );
     res.status(200).json({ data });
   } catch (error) {
-    res.status(204).json({ message: err });
+    next(error)
   }
 });
 
-serieRoute.delete('/:serieId', async (req, res) => {
+serieRoute.delete('/:serieId', async (req, res, next) => {
   try {
     const { serieId } = req.params
     const data = await service
     .removeSerie(serieId)
     res.status(200).json({ data })
   } catch (error) {
-    res.status(204).json({
-      message: error,
-    })
+    next(error)
   }
 })
 
